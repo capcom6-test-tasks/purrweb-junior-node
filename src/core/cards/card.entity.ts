@@ -1,5 +1,6 @@
-import { BaseEntity } from "src/db/base.entity";
+
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { BaseEntity } from "../base/base.entity";
 import { Column as ColumnEntity } from "../columns/column.entity";
 import { Comment } from "../comments/comment.entity";
 
