@@ -1,8 +1,9 @@
 import { Column, PrimaryGeneratedColumn } from "typeorm";
+import { ID } from "./id.type";
 
 export class BaseEntity {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: ID;
     // @Column({ unique: true })
     // extId: string;
 
