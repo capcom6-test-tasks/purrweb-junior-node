@@ -1,3 +1,4 @@
+import { Expose } from "class-transformer";
 import { IsEmail, Length } from "class-validator";
 import { UserItem } from "src/core/users/user.dto";
 
@@ -16,5 +17,10 @@ export class SignUpRequest {
 }
 
 export class SignInResponse {
+    @Expose()
     accessToken: string;
+
+    constructor(accessToken: string) {
+        this.accessToken = accessToken;
+    }
 }

@@ -1,4 +1,5 @@
 @baseUrl=http://localhost:3000/api
+@token={{$dotenv TOKEN}}
 
 ###
 GET {{baseUrl}} HTTP/1.1
@@ -21,3 +22,11 @@ Content-Type: application/json
     "email": "user{{$randomInt 1 10}}@example.com",
     "password": "test12345"
 }
+
+###
+GET {{baseUrl}}/users HTTP/1.1
+Authorization: Bearer {{token}}
+
+###
+GET {{baseUrl}}/users/2 HTTP/1.1
+Authorization: Bearer {{token}}

@@ -11,6 +11,13 @@ export class UsersService {
 
     }
 
+    public async findAll(): Promise<UserItem[]> {
+        const users = await this.dataSource
+            .getRepository(User)
+            .find();
+        return users;
+    }
+
     public async findById(id: number): Promise<UserItem | null> {
         const user = await this.dataSource
             .getRepository(User)

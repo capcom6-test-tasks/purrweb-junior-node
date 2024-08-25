@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Request } from 'express';
 import { SignInResponse, SignUpRequest } from './auth.dto';
@@ -16,16 +16,13 @@ export class AuthController {
     async signUp(@Body() body: SignUpRequest): Promise<SignInResponse> {
         const user = await this.authService.signUp(body.email, body.password);
 
-        return {
-            accessToken: await this.authService.makeJwtToken(user)
-        };
+        return new SignInResponse(await this.authService.makeJwtToken(user));
     }
 
     @Post('signin')
+    @HttpCode(200)
     @UseGuards(LocalAuthGuard)
     async login(@Req() req: Request): Promise<SignInResponse> {
-        return {
-            accessToken: await this.authService.makeJwtToken(req.user as UserItem)
-        };
+        return new SignInResponse(await this.authService.makeJwtToken(req.user as UserItem));
     }
 }
