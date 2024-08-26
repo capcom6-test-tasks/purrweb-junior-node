@@ -1,5 +1,6 @@
 import { Expose } from "class-transformer";
 import { IsEmail, Length } from "class-validator";
+import { ID } from "src/core/base/id.type";
 import { UserItem } from "src/core/users/user.dto";
 
 export type UserDto = Omit<UserItem, 'passwordHash'>;
@@ -18,9 +19,12 @@ export class SignUpRequest {
 
 export class SignInResponse {
     @Expose()
+    userId: ID;
+    @Expose()
     accessToken: string;
 
-    constructor(accessToken: string) {
+    constructor(userId: ID, accessToken: string) {
+        this.userId = userId;
         this.accessToken = accessToken;
     }
 }

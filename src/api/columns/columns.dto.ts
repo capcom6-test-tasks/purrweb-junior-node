@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import { ID } from "src/core/base/id.type";
 
-export class Column {
+export class ColumnDto {
     @Expose()
     id: ID;
     @Expose()
@@ -10,7 +10,11 @@ export class Column {
     title: string;
     @Expose()
     color: string;
+
+    constructor(source: ColumnDto) {
+        Object.assign(this, source);
+    }
 }
 
-export type PostColumn = Omit<Column, 'id'>;
-export type PatchColumn = Partial<PostColumn>;
+export type PostColumnDto = Omit<ColumnDto, 'id'>;
+export type PatchColumnDto = Partial<PostColumnDto>;
