@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, NotFoundException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { ColumnsService } from 'src/core/columns/columns.service';
 import { UserItem } from 'src/core/users/user.dto';
@@ -26,7 +26,11 @@ export class ColumnsGuard implements CanActivate {
 
     return this.columnsService.findById(columnId)
       .then(column => {
-        return column?.user?.id === user.id;
+        if (!column) {
+          throw new NotFoundException('Column not found');
+        }
+
+        return column?.userId == user.id;
       });
   }
 }

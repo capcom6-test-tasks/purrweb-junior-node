@@ -3,6 +3,7 @@ import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
 import { Column as ColumnEntity } from "../columns/column.entity";
 import { Comment } from "../comments/comment.entity";
+import { ID } from "../base/id.type";
 
 @Entity('cards')
 export class Card extends BaseEntity {
@@ -13,6 +14,8 @@ export class Card extends BaseEntity {
     @Column({ nullable: true })
     dueDate: Date | null;
 
+    @Column()
+    columnId: ID;
     @ManyToOne(() => ColumnEntity, column => column.cards)
     column: ColumnEntity;
 

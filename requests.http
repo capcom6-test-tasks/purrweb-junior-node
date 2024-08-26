@@ -34,3 +34,30 @@ Authorization: Bearer {{token}}
 ###
 GET {{baseUrl}}/users/4/columns HTTP/1.1
 Authorization: Bearer {{token}}
+
+###
+GET {{baseUrl}}/users/4/columns/3 HTTP/1.1
+Authorization: Bearer {{token}}
+
+###
+POST {{baseUrl}}/users/4/columns HTTP/1.1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "position": {{$randomInt 1 100}},
+    "title": "Title {{$randomInt 1 100}}"
+}
+
+###
+PATCH {{baseUrl}}/users/4/columns/{{$randomInt 1 100}} HTTP/1.1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "title": "Title {{$guid}}"
+}
+
+###
+DELETE {{baseUrl}}/users/4/columns/{{$randomInt 1 100}} HTTP/1.1
+Authorization: Bearer {{token}}

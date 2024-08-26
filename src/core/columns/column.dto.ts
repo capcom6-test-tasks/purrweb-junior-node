@@ -1,13 +1,12 @@
 import { ID } from "../base/id.type";
-import { User } from "../users/user.entity";
 
 export interface ColumnItem {
     id: ID;
     position: number;
     title: string;
-    color: string;
+    color?: string;
 
-    user: User;
+    userId: ID;
 }
 
 export type CreateColumn = Omit<ColumnItem, 'id'>;
