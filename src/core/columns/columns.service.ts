@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { ID } from '../base/id.type';
-import { ColumnItem, CreateColumn, UpdateColumn } from './column.dto';
-import { Column } from './column.entity';
+import { ColumnItem, CreateColumn, UpdateColumn } from './column.item';
+import { Column } from './columns.entity';
 
 @Injectable()
 export class ColumnsService {

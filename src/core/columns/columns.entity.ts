@@ -1,8 +1,8 @@
 import { Column as DbColumn, Entity, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
-import { Card } from "../cards/card.entity";
-import { User } from "../users/user.entity";
 import { ID } from "../base/id.type";
+import { Card } from "../cards/cards.entity";
+import { User } from "../users/user.entity";
 
 @Entity('columns')
 export class Column extends BaseEntity {

@@ -6,8 +6,11 @@ export interface ColumnItem {
     title: string;
     color?: string;
 
+    createdAt: Date;
+    updatedAt: Date;
+
     userId: ID;
 }
 
-export type CreateColumn = Omit<ColumnItem, 'id'>;
+export type CreateColumn = Omit<ColumnItem, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateColumn = Partial<CreateColumn>;

@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
-import { Card } from "../cards/card.entity";
+import { Card } from "../cards/cards.entity";
 import { ID } from "../base/id.type";
 
 @Entity('comments')
