@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ID } from 'src/core/base/id.type';
 import { ColumnsService } from 'src/core/columns/columns.service';
 import { UserItem } from 'src/core/users/user.dto';
@@ -8,6 +8,8 @@ import { UsersGuard } from '../users/users.guard';
 import { COLUMN_ID_PARAM } from './columns.const';
 import { ColumnDto, PatchColumnDto, PostColumnDto } from './columns.dto';
 import { ColumnsGuard } from './columns.guard';
+import { ColumnItem } from 'src/core/columns/columns.item';
+import { Column } from './columns.decorator';
 
 @Controller()
 @UseGuards(JwtAuthGuard, UsersGuard)
@@ -25,9 +27,9 @@ export class ColumnsController {
 
     @Get(`:${COLUMN_ID_PARAM}`)
     @UseGuards(ColumnsGuard)
-    async findOne(@Param(COLUMN_ID_PARAM) columnId: ID): Promise<ColumnDto> {
-        const column = await this.columnsService.findById(columnId);
-
+    async findOne(
+        @Column() column: ColumnItem
+    ): Promise<ColumnDto> {
         return new ColumnDto(column);
     }
 
@@ -40,10 +42,13 @@ export class ColumnsController {
 
     @Patch(`:${COLUMN_ID_PARAM}`)
     @UseGuards(ColumnsGuard)
-    async update(@User() user: UserItem, @Param(COLUMN_ID_PARAM) columnId: ID, @Body() body: PatchColumnDto): Promise<ColumnDto> {
-        const column = await this.columnsService.update(columnId, { ...body });
+    async update(
+        @Column() column: ColumnItem,
+        @Body() body: PatchColumnDto
+    ): Promise<ColumnDto> {
+        const updated = await this.columnsService.update(column.id, { ...body });
 
-        return new ColumnDto(column);
+        return new ColumnDto(updated);
     }
 
     @Delete(`:${COLUMN_ID_PARAM}`)

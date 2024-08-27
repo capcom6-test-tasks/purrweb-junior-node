@@ -1,15 +1,20 @@
-import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { CardsService } from 'src/core/cards/cards.service';
-import { CardDto, PatchCardDto, PostCardDto } from './cards.dto';
-import { COLUMN_ID_PARAM } from '../columns/columns.const';
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ID } from 'src/core/base/id.type';
+import { CardsService } from 'src/core/cards/cards.service';
+import { ColumnItem } from 'src/core/columns/columns.item';
+import { ColumnsService } from 'src/core/columns/columns.service';
+import { UserItem } from 'src/core/users/user.dto';
+import { User } from '../auth/decorators/user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { COLUMN_ID_PARAM } from '../columns/columns.const';
+import { Column } from '../columns/columns.decorator';
 import { ColumnsGuard } from '../columns/columns.guard';
 import { UsersGuard } from '../users/users.guard';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { ColumnsService } from 'src/core/columns/columns.service';
-import { User } from '../auth/decorators/user.decorator';
-import { UserItem } from 'src/core/users/user.dto';
-import { use } from 'passport';
+import { CardDto, PatchCardDto, PostCardDto } from './cards.dto';
+import { CARD_ID_PARAM } from './cards.const';
+import { CardsGuard } from './cards.guard';
+import { Card } from './cards.decorator';
+import { CardItem } from 'src/core/cards/cards.item';
 
 @Controller()
 @UseGuards(JwtAuthGuard, UsersGuard, ColumnsGuard)
@@ -20,19 +25,19 @@ export class CardsController {
     ) { }
 
     @Get()
-    async findAll(@Param(COLUMN_ID_PARAM) columnId: ID): Promise<CardDto[]> {
-        const cards = await this.cardsService.findAll(columnId);
+    async findAll(
+        @Column() column: ColumnItem
+    ): Promise<CardDto[]> {
+        const cards = await this.cardsService.findAll(column.id);
 
         return cards.map(card => new CardDto(card));
     }
 
-    @Get(`:cardId`)
-    async findOne(@Param(COLUMN_ID_PARAM) columnId: ID, @Param('cardId') cardId: ID): Promise<CardDto> {
-        const card = await this.cardsService.findById(cardId);
-        if (card?.columnId != columnId) {
-            throw new NotFoundException('Card not found');
-        }
-
+    @Get(`:${CARD_ID_PARAM}`)
+    @UseGuards(CardsGuard)
+    async findOne(
+        @Card() card: CardItem
+    ): Promise<CardDto> {
         return new CardDto(card);
     }
 
@@ -43,26 +48,21 @@ export class CardsController {
     }
 
     @Patch(`:cardId`)
+    @UseGuards(CardsGuard)
     async update(
-        @User() user: UserItem,
-        @Param(COLUMN_ID_PARAM) columnId: ID,
-        @Param('cardId') cardId: ID,
+        @Column() column: ColumnItem,
+        @Card() card: CardItem,
         @Body() body: PatchCardDto
     ): Promise<CardDto> {
-        const existed = await this.cardsService.findById(cardId);
-        if (existed?.columnId != columnId) {
-            throw new NotFoundException('Card not found');
-        }
-
-        if (body.columnId) {
-            const column = await this.columnsService.findById(body.columnId);
-            if (column?.userId != user.id) {
-                throw new NotFoundException('Column not found');
+        if (body.columnId && body.columnId != column.id) {
+            const newColumn = await this.columnsService.findById(body.columnId);
+            if (newColumn?.userId != column.userId) {
+                throw new ForbiddenException();
             }
         }
 
-        const card = await this.cardsService.update(cardId, { ...body });
-        return new CardDto(card);
+        const updated = await this.cardsService.update(card.id, { ...body });
+        return new CardDto(updated);
     }
 
     @Delete(`:cardId`)

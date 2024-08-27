@@ -2,7 +2,7 @@
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
 import { Column as ColumnEntity } from "../columns/columns.entity";
-import { Comment } from "../comments/comment.entity";
+import { Comment } from "../comments/comments.entity";
 import { ID } from "../base/id.type";
 
 @Entity('cards')
