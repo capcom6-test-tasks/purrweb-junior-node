@@ -28,19 +28,19 @@ GET {{baseUrl}}/users HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-GET {{baseUrl}}/users/2 HTTP/1.1
+GET {{baseUrl}}/users/1 HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-GET {{baseUrl}}/users/4/columns HTTP/1.1
+GET {{baseUrl}}/users/1/columns HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-GET {{baseUrl}}/users/4/columns/3 HTTP/1.1
+GET {{baseUrl}}/users/1/columns/1 HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-POST {{baseUrl}}/users/4/columns HTTP/1.1
+POST {{baseUrl}}/users/1/columns HTTP/1.1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -61,3 +61,21 @@ Content-Type: application/json
 ###
 DELETE {{baseUrl}}/users/4/columns/{{$randomInt 1 100}} HTTP/1.1
 Authorization: Bearer {{token}}
+
+###
+GET {{baseUrl}}/users/1/columns/1/cards HTTP/1.1
+Authorization: Bearer {{token}}
+
+###
+GET {{baseUrl}}/users/1/columns/1/cards/3 HTTP/1.1
+Authorization: Bearer {{token}}
+
+###
+POST {{baseUrl}}/users/1/columns/1/cards HTTP/1.1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "title": "Card #{{$randomInt 1 100}}",
+    "description": "Description {{$guid}}"
+}

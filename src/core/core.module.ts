@@ -1,13 +1,9 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ColumnsModule } from './columns/columns.module';
-import { CardsController } from './cards/cards.controller';
-import { CardsService } from './cards/cards.service';
+import { CardsModule } from './cards/cards.module';
 
 @Module({
-  imports: [UsersModule, ColumnsModule],
-  exports: [UsersModule],
-  controllers: [CardsController],
-  providers: [CardsService],
+  imports: [UsersModule, ColumnsModule, CardsModule],
 })
 export class CoreModule { }

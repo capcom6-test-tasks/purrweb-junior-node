@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
-import { UsersApiModule } from './users/users.module';
-import { ColumnsApiModule } from './columns/columns.module';
 import { RouterModule } from '@nestjs/core';
+import { AuthModule } from './auth/auth.module';
+import { CardsApiModule } from './cards/cards.module';
+import { COLUMN_ID_PARAM } from './columns/columns.const';
+import { ColumnsApiModule } from './columns/columns.module';
 import { USER_ID_PARAM } from './users/users.const';
-import { CardsModule } from './cards/cards.module';
+import { UsersApiModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -17,12 +18,18 @@ import { CardsModule } from './cards/cards.module';
         children: [
           {
             path: 'columns',
-            module: ColumnsApiModule
+            module: ColumnsApiModule,
+            children: [
+              {
+                path: `:${COLUMN_ID_PARAM}/cards`,
+                module: CardsApiModule,
+              }
+            ]
           }
         ]
       }
     ]),
-    CardsModule
+    CardsApiModule
   ],
   controllers: []
 })

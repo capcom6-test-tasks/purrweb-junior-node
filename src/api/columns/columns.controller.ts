@@ -1,14 +1,13 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { ColumnsService } from 'src/core/columns/columns.service';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { ID } from 'src/core/base/id.type';
-import { UsersGuard } from '../users/users.guard';
-import { ColumnDto, PatchColumnDto, PostColumnDto } from './columns.dto';
-import { CreateColumn, UpdateColumn } from 'src/core/columns/column.dto';
-import { COLUMN_ID_PARAM } from './columns.const';
-import { ColumnsGuard } from './columns.guard';
-import { User } from '../auth/decorators/user.decorator';
+import { ColumnsService } from 'src/core/columns/columns.service';
 import { UserItem } from 'src/core/users/user.dto';
+import { User } from '../auth/decorators/user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { UsersGuard } from '../users/users.guard';
+import { COLUMN_ID_PARAM } from './columns.const';
+import { ColumnDto, PatchColumnDto, PostColumnDto } from './columns.dto';
+import { ColumnsGuard } from './columns.guard';
 
 @Controller()
 @UseGuards(JwtAuthGuard, UsersGuard)
@@ -18,8 +17,8 @@ export class ColumnsController {
     ) { }
 
     @Get()
-    async findAll(@Param('userId') userId: ID): Promise<ColumnDto[]> {
-        const columns = await this.columnsService.findAll(userId);
+    async findAll(@User() user: UserItem): Promise<ColumnDto[]> {
+        const columns = await this.columnsService.findAll(user.id);
 
         return columns.map(column => new ColumnDto(column));
     }
