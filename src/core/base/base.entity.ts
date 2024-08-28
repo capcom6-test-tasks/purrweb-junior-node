@@ -1,4 +1,4 @@
-import { Column, PrimaryGeneratedColumn } from "typeorm";
+import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ID } from "./id.type";
 
 export class BaseEntity {
@@ -7,8 +7,8 @@ export class BaseEntity {
     // @Column({ unique: true })
     // extId: string;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     createdAt: Date;
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn()
     updatedAt: Date;
 }

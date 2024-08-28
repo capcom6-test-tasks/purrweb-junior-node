@@ -6,61 +6,66 @@ import { CommentsService } from 'src/core/comments/comments.service';
 import { CARD_ID_PARAM } from '../cards/cards.const';
 import { ID } from 'src/core/base/id.type';
 import { CommentDto, PatchCommentDto, PostCommentDto } from './comments.dto';
+import { CardsGuard } from '../cards/cards.guard';
+import { Card } from '../cards/cards.decorator';
+import { CardItem } from 'src/core/cards/cards.item';
+import { CommentsGuard } from './comments.guard';
+import { Comment } from './comments.decorator';
+import { CommentItem } from 'src/core/comments/comments.item';
+import { COMMENT_ID_PARAM } from './comments.const';
 
 @Controller()
-@UseGuards(JwtAuthGuard, UsersGuard, ColumnsGuard)
+@UseGuards(JwtAuthGuard, UsersGuard, ColumnsGuard, CardsGuard)
 export class CommentsController {
     constructor(
         private readonly commentsService: CommentsService
     ) { }
 
     @Get()
-    async findAll(@Param(CARD_ID_PARAM) cardId: ID): Promise<CommentDto[]> {
-        const comments = await this.commentsService.findAll(cardId);
+    async findAll(
+        @Card() card: CardItem
+    ): Promise<CommentDto[]> {
+        const comments = await this.commentsService.findAll(card.id);
 
         return comments.map(comment => new CommentDto(comment));
     }
 
 
-    @Get(':id')
-    async findById(@Param(CARD_ID_PARAM) cardId: ID, @Param('id') id: ID): Promise<CommentDto | null> {
-        const comment = await this.commentsService.findById(id);
-        if (!comment) {
-            throw new NotFoundException();
-        }
-
-        if (comment.cardId !== cardId) {
-            throw new NotFoundException();
-        }
-
+    @Get(`:${COMMENT_ID_PARAM}`)
+    @UseGuards(CommentsGuard)
+    async findById(
+        @Comment() comment: CommentItem
+    ): Promise<CommentDto | null> {
         return new CommentDto(comment);
     }
 
     @Post()
-    async create(@Param(CARD_ID_PARAM) cardId: ID, @Body() data: PostCommentDto): Promise<CommentDto> {
-        const comment = await this.commentsService.create({ ...data, cardId });
+    async create(
+        @Card() card: CardItem,
+        @Body() data: PostCommentDto
+    ): Promise<CommentDto> {
+        const comment = await this.commentsService.create({ ...data, cardId: card.id });
+
         return new CommentDto(comment);
     }
 
-    @Patch(':id')
-    async update(@Param(CARD_ID_PARAM) cardId: ID, @Param('id') id: ID, @Body() data: PatchCommentDto): Promise<CommentDto> {
-        const existed = await this.commentsService.findById(id);
-        if (existed?.cardId != cardId) {
-            throw new NotFoundException();
-        }
+    @Get(`:${COMMENT_ID_PARAM}`)
+    @UseGuards(CommentsGuard)
+    async update(
+        @Comment() comment: CommentItem,
+        @Body() data: PatchCommentDto
+    ): Promise<CommentDto> {
+        const updated = await this.commentsService.update(comment.id, data);
 
-        const comment = await this.commentsService.update(id, data);
-        return new CommentDto(comment);
+        return new CommentDto(updated);
     }
 
-    @Delete(':id')
+    @Delete(`:${COMMENT_ID_PARAM}`)
     @HttpCode(204)
-    async delete(@Param(CARD_ID_PARAM) cardId: ID, @Param('id') id: ID): Promise<void> {
-        const existed = await this.commentsService.findById(id);
-        if (existed?.cardId != cardId) {
-            throw new NotFoundException();
-        }
-
-        await this.commentsService.delete(id);
+    @UseGuards(CommentsGuard)
+    async delete(
+        @Comment() comment: CommentItem
+    ): Promise<void> {
+        await this.commentsService.delete(comment.id);
     }
 }
