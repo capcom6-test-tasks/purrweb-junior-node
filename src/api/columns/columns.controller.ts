@@ -10,7 +10,13 @@ import { ColumnDto, PatchColumnDto, PostColumnDto } from './columns.dto';
 import { ColumnsGuard } from './columns.guard';
 import { ColumnItem } from 'src/core/columns/columns.item';
 import { Column } from './columns.decorator';
+import { ApiTags, ApiBearerAuth, ApiParam, ApiForbiddenResponse, ApiOperation, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { USER_ID_PARAM } from '../users/users.const';
 
+@ApiTags('Columns')
+@ApiBearerAuth()
+@ApiParam({ name: USER_ID_PARAM, description: 'User ID' })
+@ApiForbiddenResponse({ description: 'Forbidden' })
 @Controller()
 @UseGuards(JwtAuthGuard, UsersGuard)
 export class ColumnsController {
@@ -19,6 +25,8 @@ export class ColumnsController {
     ) { }
 
     @Get()
+    @ApiOperation({ summary: 'Get all columns' })
+    @ApiOkResponse({ status: 200, type: [ColumnDto] })
     async findAll(@User() user: UserItem): Promise<ColumnDto[]> {
         const columns = await this.columnsService.findAll(user.id);
 
@@ -27,6 +35,10 @@ export class ColumnsController {
 
     @Get(`:${COLUMN_ID_PARAM}`)
     @UseGuards(ColumnsGuard)
+    @ApiOperation({ summary: 'Get column by ID' })
+    @ApiParam({ name: COLUMN_ID_PARAM, description: 'Column ID' })
+    @ApiOkResponse({ status: 200, type: ColumnDto })
+    @ApiNotFoundResponse({ description: 'Column not found' })
     async findOne(
         @Column() column: ColumnItem
     ): Promise<ColumnDto> {
@@ -34,6 +46,8 @@ export class ColumnsController {
     }
 
     @Post()
+    @ApiOperation({ summary: 'Create column' })
+    @ApiOkResponse({ status: 201, type: ColumnDto })
     async create(@User() user: UserItem, @Body() body: PostColumnDto): Promise<ColumnDto> {
         const column = await this.columnsService.create({ ...body, userId: user.id });
 
@@ -42,6 +56,10 @@ export class ColumnsController {
 
     @Patch(`:${COLUMN_ID_PARAM}`)
     @UseGuards(ColumnsGuard)
+    @ApiOperation({ summary: 'Update column' })
+    @ApiParam({ name: COLUMN_ID_PARAM, description: 'Column ID' })
+    @ApiOkResponse({ status: 200, type: ColumnDto })
+    @ApiNotFoundResponse({ description: 'Column not found' })
     async update(
         @Column() column: ColumnItem,
         @Body() body: PatchColumnDto
@@ -54,6 +72,9 @@ export class ColumnsController {
     @Delete(`:${COLUMN_ID_PARAM}`)
     @UseGuards(ColumnsGuard)
     @HttpCode(204)
+    @ApiOperation({ summary: 'Delete column' })
+    @ApiParam({ name: COLUMN_ID_PARAM, description: 'Column ID' })
+    @ApiNotFoundResponse({ description: 'Column not found' })
     async delete(@Param(COLUMN_ID_PARAM) columnId: ID): Promise<void> {
         await this.columnsService.delete(columnId);
     }
