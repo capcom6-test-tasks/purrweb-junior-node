@@ -49,7 +49,7 @@ export class CommentsController {
         return new CommentDto(comment);
     }
 
-    @Get(`:${COMMENT_ID_PARAM}`)
+    @Patch(`:${COMMENT_ID_PARAM}`)
     @UseGuards(CommentsGuard)
     async update(
         @Comment() comment: CommentItem,
