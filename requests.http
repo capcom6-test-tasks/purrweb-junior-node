@@ -11,7 +11,7 @@ Content-Type: application/json
 
 {
     "email": "user{{$randomInt 1 10}}@example.com",
-    "password": "test12345"
+    "password": "Test12345!"
 }
 
 ###
@@ -20,7 +20,7 @@ Content-Type: application/json
 
 {
     "email": "user{{$randomInt 1 10}}@example.com",
-    "password": "test12345"
+    "password": "Test12345!"
 }
 
 ###
@@ -30,6 +30,15 @@ Authorization: Bearer {{token}}
 ###
 GET {{baseUrl}}/users/1 HTTP/1.1
 Authorization: Bearer {{token}}
+
+###
+POST {{baseUrl}}/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "user{{$randomInt 1 10}}@example.com",
+    "password": "Test12345!"
+}
 
 ###
 GET {{baseUrl}}/users/8/columns HTTP/1.1
