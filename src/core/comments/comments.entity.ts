@@ -10,6 +10,6 @@ export class Comment extends BaseEntity {
 
     @Column()
     cardId: ID;
-    @ManyToOne(() => Card, card => card.comments)
+    @ManyToOne(() => Card, card => card.comments, { onDelete: 'CASCADE', onUpdate: 'RESTRICT' })
     card: Card;
 }

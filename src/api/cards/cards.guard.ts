@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, NotFoundException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { CardsService } from 'src/core/cards/cards.service';
 import { ColumnItem } from 'src/core/columns/columns.item';
@@ -27,9 +27,9 @@ export class CardsGuard implements CanActivate {
 
     return this.cardsService.findById(cardId)
       .then(card => {
-        // if (!card) {
-        //   throw new NotFoundException('Card not found');
-        // }
+        if (!card) {
+          throw new NotFoundException('Card not found');
+        }
 
         request.card = card;
 

@@ -16,7 +16,7 @@ export class Card extends BaseEntity {
 
     @Column()
     columnId: ID;
-    @ManyToOne(() => ColumnEntity, column => column.cards)
+    @ManyToOne(() => ColumnEntity, column => column.cards, { onDelete: 'CASCADE', onUpdate: 'RESTRICT' })
     column: ColumnEntity;
 
     @OneToMany(() => Comment, comment => comment.card)

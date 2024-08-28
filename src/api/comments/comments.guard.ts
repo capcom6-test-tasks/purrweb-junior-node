@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, NotFoundException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { CardItem } from 'src/core/cards/cards.item';
 import { CommentsService } from 'src/core/comments/comments.service';
@@ -27,9 +27,9 @@ export class CommentsGuard implements CanActivate {
 
     return this.commentsService.findById(commentId)
       .then(comment => {
-        // if (!card) {
-        //   throw new NotFoundException('Card not found');
-        // }
+        if (!comment) {
+          throw new NotFoundException('Comment not found');
+        }
 
         request.comment = comment;
 

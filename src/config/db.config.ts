@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { DataSourceOptions } from "typeorm";
 
 @Injectable()
 export class DbConfig {
@@ -17,4 +18,3 @@ export class DbConfig {
         this.DB_NAME = configService.get('DB_NAME', 'trello');
     }
 }
-

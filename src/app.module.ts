@@ -4,6 +4,7 @@ import { ApiModule } from './api/api.module';
 import { ConfigModule } from './config/config.module';
 import { DbConfig } from './config/db.config';
 import { CoreModule } from './core/core.module';
+import { dataSourceOptions } from './db';
 
 @Module({
   imports: [
@@ -13,14 +14,13 @@ import { CoreModule } from './core/core.module';
       inject: [DbConfig],
       useFactory: (config: DbConfig) => {
         return {
+          ...dataSourceOptions,
           type: 'mysql',
           host: config.DB_HOST,
           port: config.DB_PORT,
           username: config.DB_USERNAME,
           password: config.DB_PASSWORD,
           database: config.DB_NAME,
-          entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: process.env.NODE_ENV !== 'production',
         };
       },
     }),

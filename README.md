@@ -1,73 +1,68 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Тестовое задание Purrweb / backend / стажер / Node.js / NestJS
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Задача: разработать упрощенное API сервиса, аналогичного [Trello](https://trello.com/) на [NestJS](https://nestjs.com/).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Исходное задание: [TASK.md](./TASK.md).
 
-## Description
+## Сопроводительное письмо
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+В рамках выполнения задания были приняты следующие решения:
 
-## Installation
+1. Поскольку в задании не описано требований к совместной работе, то была использована линейная иерархия сущностей: пользователь - колонка - карточка - комментарий. Соответственно, и проверка доступа осуществляется по данной цепочке.
+2. Guard для разных сущностей целенаправленно сделаны отдельными для большей гибкости. Это дает большее кол-во запросов в БД по сравнение с единым guard, где можно было бы использовать объединение таблиц.
+3. Guard при проверке доступа также обогащают объект запроса, добавляя туда объекты соответствующих сущностей. Это позволяет в конечных обработчиках вовсе обойтись без запросов к БД.
+4. Есть определенная неоднозначность в использовании кодов ответа `403` и `404` из-за вопросов безопасности. Если отвечать на несуществующий объект кодом `404`, а на существующий, но недоступный текущему пользователю `403`, то это позволит извне определить ИД существующих объектов даже не имея к ним доступа.
+5. Использование автоинкементных ИД - это упрощение для тестового задания. В реальном проекте стоило бы использовать случайные ИД как минимум для внешнего API. Это позволит не только исключить угадывание ИД, но и оценку внешним наблюдателем кол-ва сущностей в БД проекта.
+6. Поскольку заданием не предусмотрены какие-либо роли пользователей, то все пользователи имеют равные права.
+7. Метод `PUT` не реализован для сущностей, поскольку в контексте задачи он равносилен `PATCH` с передачей всех полей.
 
-```bash
-$ npm install
+## Использованные технологии
+
+- NestJS
+- TypeORM
+- Passport.js
+- MySQL/MariaDB
+
+## Структура БД
+
+![db](./docs/assets/database.png)
+
+## Настройки
+
+Настройка проекта осуществляется с помощью переменных окружения:
+
+| Переменная       | Назначение                                   | По умолчанию  |
+| ---------------- | -------------------------------------------- | ------------- |
+| `NODE_ENV`       | Режим работы, `production` или `development` | `development` |
+| `DB_HOST`        | Адрес БД                                     | `localhost`   |
+| `DB_PORT`        | Порт БД                                      | `3306`        |
+| `DB_USERNAME`    | Имя пользователя БД                          | `trello`      |
+| `DB_PASSWORD`    | Пароль БД                                    | `trello`      |
+| `DB_NAME`        | Название БД                                  | `trello`      |
+| `JWT_SECRET`     | Секретный ключ JWT                           | `secret`      |
+| `JWT_EXPIRES_IN` | Продолжительность действия JWT               | `1d`          |
+
+**ВНИМАНИЕ!** Значение `NODE_ENV` определяем логику работы со структурой БД. При значении, отличном от `production`, происходит автоматическая синхронизация структуры БД. При значении `production` используются предварительно созданные миграции.
+
+## Запуск
+
+### Разработка
+
+В этом режиме выполняется автоматическая синхронизация структуры БД средствами TypeORM.
+
+```shell
+npm i
+npm run start:dev
 ```
 
-## Running the app
+### Docker
 
-```bash
-# development
-$ npm run start
+В этом случае используются предварительно созданные миграции, они запускаются автоматически средствами TypeORM при каждом запуске приложения.
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```shell
+docker-compose up -d
 ```
 
-## Test
+## Лицензия
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+[Apache License, Version 2.0](./LICENSE)

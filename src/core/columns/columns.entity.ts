@@ -17,9 +17,9 @@ export class Column extends BaseEntity {
 
     @DbColumn()
     userId: ID;
-    @ManyToOne(() => User, user => null)
+    @ManyToOne(() => User, user => null, { onDelete: 'CASCADE', onUpdate: 'RESTRICT' })
     user: User;
 
-    @OneToMany(() => Card, card => card.column)
+    @OneToMany(() => Card, card => card.column, { onDelete: 'CASCADE', onUpdate: 'RESTRICT' })
     cards: Card[];
 }
