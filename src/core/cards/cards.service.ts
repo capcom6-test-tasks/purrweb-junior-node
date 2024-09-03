@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
-import { Card } from './cards.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { ID } from '../base/id.type';
+import { Card } from './cards.entity';
 import { CardItem, CreateCard, UpdateCard } from './cards.item';
 
 @Injectable()
 export class CardsService {
-    private readonly cards: Repository<Card>;
 
     constructor(
-        dataSource: DataSource
+        @InjectRepository(Card)
+        private readonly cards: Repository<Card>,
     ) {
-        this.cards = dataSource.getRepository(Card);
     }
 
 

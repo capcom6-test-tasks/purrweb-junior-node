@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
-import { User } from './user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateUser, UpdateUser, UserItem } from './user.dto';
+import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
-    private readonly users: Repository<User>;
-
     constructor(
-        dataSource: DataSource
+        @InjectRepository(User)
+        private readonly users: Repository<User>
     ) {
-        this.users = dataSource.getRepository(User);
     }
 
     public async findAll(): Promise<UserItem[]> {

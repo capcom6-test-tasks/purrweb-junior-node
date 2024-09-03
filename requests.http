@@ -41,15 +41,15 @@ Content-Type: application/json
 }
 
 ###
-GET {{baseUrl}}/users/8/columns HTTP/1.1
+GET {{baseUrl}}/users/1/columns HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-GET {{baseUrl}}/users/8/columns/21 HTTP/1.1
+GET {{baseUrl}}/users/1/columns/1 HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-POST {{baseUrl}}/users/8/columns HTTP/1.1
+POST {{baseUrl}}/users/1/columns HTTP/1.1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -59,7 +59,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{baseUrl}}/users/8/columns/{{$randomInt 1 100}} HTTP/1.1
+PATCH {{baseUrl}}/users/1/columns/{{$randomInt 1 100}} HTTP/1.1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -68,19 +68,19 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{baseUrl}}/users/8/columns/{{$randomInt 1 100}} HTTP/1.1
+DELETE {{baseUrl}}/users/1/columns/{{$randomInt 1 100}} HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-GET {{baseUrl}}/users/8/columns/1/cards HTTP/1.1
+GET {{baseUrl}}/users/1/columns/1/cards HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-GET {{baseUrl}}/users/8/columns/1/cards/1 HTTP/1.1
+GET {{baseUrl}}/users/1/columns/1/cards/1 HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-POST {{baseUrl}}/users/8/columns/1/cards HTTP/1.1
+POST {{baseUrl}}/users/1/columns/1/cards HTTP/1.1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -90,7 +90,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{baseUrl}}/users/8/columns/1/cards/1 HTTP/1.1
+PATCH {{baseUrl}}/users/1/columns/1/cards/1 HTTP/1.1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -99,28 +99,19 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{baseUrl}}/users/8/columns/1/cards/3 HTTP/1.1
+DELETE {{baseUrl}}/users/1/columns/1/cards/3 HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-GET {{baseUrl}}/users/8/columns/1/cards/1/comments HTTP/1.1
+GET {{baseUrl}}/users/1/columns/1/cards/1/comments HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-GET {{baseUrl}}/users/8/columns/1/cards/1/comments/1 HTTP/1.1
+GET {{baseUrl}}/users/1/columns/1/cards/1/comments/1 HTTP/1.1
 Authorization: Bearer {{token}}
 
 ###
-POST {{baseUrl}}/users/8/columns/1/cards/1/comments HTTP/1.1
-Authorization: Bearer {{token}}
-Content-Type: application/json
-
-{
-    "text": "Comment {{$guid}}"
-}
-
-###
-PATCH  {{baseUrl}}/users/8/columns/1/cards/1/comments/1 HTTP/1.1
+POST {{baseUrl}}/users/1/columns/1/cards/1/comments HTTP/1.1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -129,5 +120,14 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{baseUrl}}/users/8/columns/1/cards/1/comments/{{$randomInt 1 100}} HTTP/1.1
+PATCH  {{baseUrl}}/users/1/columns/1/cards/1/comments/1 HTTP/1.1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "text": "Comment {{$guid}}"
+}
+
+###
+DELETE {{baseUrl}}/users/1/columns/1/cards/1/comments/{{$randomInt 1 100}} HTTP/1.1
 Authorization: Bearer {{token}}

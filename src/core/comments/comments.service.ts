@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
-import { CommentItem, CreateComment, UpdateComment } from './comments.item';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { ID } from '../base/id.type';
 import { Comment } from './comments.entity';
+import { CommentItem, CreateComment, UpdateComment } from './comments.item';
 
 @Injectable()
 export class CommentsService {
-    private readonly comments: Repository<Comment>;
-
     constructor(
-        dataSource: DataSource
+        @InjectRepository(Comment)
+        private readonly comments: Repository<Comment>
     ) {
-        this.comments = dataSource.getRepository(Comment);
     }
 
 
